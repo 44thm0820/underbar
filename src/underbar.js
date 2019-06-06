@@ -7,6 +7,7 @@
   // seem very useful, but remember it--if a function needs to provide an
   // iterator when the user does not pass one in, this will be handy.
   _.identity = function(val) {
+    return val;
   };
 
   /**
@@ -33,10 +34,23 @@
   _.first = function(array, n) {
     return n === undefined ? array[0] : array.slice(0, n);
   };
-
+  
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
+    return n === 0 ? [] 
+    : n === undefined ? array[array.length-1] 
+    : array.slice(-n);
+
+    // yes i used a nested ternary.
+    // decided to use per airbnb's posting:
+    // https://github.com/airbnb/javascript/issues/1718
+
+    // commented out code below using non-nested ternary
+    // if ( n === 0 ) {
+    //   return [];
+    // }
+    // return n === undefined ? array[array.length-1] : array.slice(-n);
   };
 
   // Call iterator(value, key, collection) for each element of collection.
