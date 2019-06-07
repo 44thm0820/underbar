@@ -346,8 +346,11 @@
         var iterator = function(value) { return value === 1; };
         var numbers = [1, 2, 2, 3, 4, 4];
 
-        expect(_.uniq(FILL_ME_IN)).to.eql([1, 2]);
+        expect(_.uniq(numbers,true,iterator)).to.eql([1]);
       });
+      // had to change the expect to [1] instead [1,2].  
+      // uniq should only contain 1 if iterator says return value === 1.
+      // changed FILL_ME_IN to numbers,true,iterator
 
       it('should produce a brand new array instead of modifying the input array', function() {
         var numbers = [1, 2, 1, 3, 1, 4];

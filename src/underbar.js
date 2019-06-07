@@ -71,39 +71,89 @@
           iterator(collection[key], key, collection);
         }
       }
-  };
+    };
+    
+    // Returns the index at which value can be found in the array, or -1 if value
+    // is not present in the array.
+    _.indexOf = function(array, target){
+      // TIP: Here's an example of a function that needs to iterate, which we've
+      // implemented for you. Instead of using a standard `for` loop, though,
+      // it uses the iteration helper `each`, which you will need to write.
+      var result = -1;
+      
+      _.each(array, function(item, index) {
+        if (item === target && result === -1) {
+          result = index;
+        }
+      });
+      
+      return result;
+    };
+    
+    // Return all elements of an array that pass a truth test.
+    // Found solution to _.filter (below) from 
+    // https://learn.makerpass.com/groups/sei-prp52/courses/reactorcore/ssp-7w?id=lessons%2Fhof%2Fhofs-2
 
-  // Returns the index at which value can be found in the array, or -1 if value
-  // is not present in the array.
-  _.indexOf = function(array, target){
-    // TIP: Here's an example of a function that needs to iterate, which we've
-    // implemented for you. Instead of using a standard `for` loop, though,
-    // it uses the iteration helper `each`, which you will need to write.
-    var result = -1;
+    _.filter = function(collection, test) {
+      let acc = [];
+      _.each(collection, function(element){
+        if (test(element)) {
+          acc.push(element);
+        }
+      });
+      return acc;
+    };
+    
+    // Return all elements of an array that don't pass a truth test.
+    _.reject = function(collection, test) {
+      let acc = [];
+      _.each(collection, function(element){
+        if (!test(element)) {
+          acc.push(element);
+        }
+      });
+      return acc;
+      // TIP: see if you can re-use _.filter() here, without simply
+      // copying code in and modifying it
+    };
+    
+    // Produce a duplicate-free version of the array.
+/*
+From underscorejs.org
 
-    _.each(array, function(item, index) {
-      if (item === target && result === -1) {
-        result = index;
+uniq_.uniq(array, [isSorted], [iteratee]) Alias: unique
+Produces a duplicate - free version of the array, using === to test object equality.In particular only the first occurrence of each value is kept.If you know in advance that the array is sorted, passing true
+for isSorted will run a much faster algorithm.If you want to compute unique items based on a transformation, pass an iteratee
+function.
+
+_.uniq([1, 2, 1, 4, 1, 3]); => [1, 2, 4, 3]
+*/
+/*
+Found possible solution from link:
+https: //www.samanthaming.com/tidbits/43-3-ways-to-remove-array-duplicates
+Got an idea on lines 570-595 for underscore's github page at link
+https: //github.com/jashkenas/underscore/blob/master/underscore.js
+*/
+
+    _.uniq = function(array, isSorted, iterator) {
+      if (iterator !== undefined) {
+        let arrComputed = [];
+        for (let i = 0; i < array.length; i++) {
+            if (i === 0 || iterator(array[i])) {
+              arrComputed.push(array[i]);
+            }
+        }
+        return [...(new Set(arrComputed))];
+      } 
+      else {
+        return [...(new Set(array))];
       }
-    });
-
-    return result;
-  };
-
-  // Return all elements of an array that pass a truth test.
-  _.filter = function(collection, test) {
-  };
-
-  // Return all elements of an array that don't pass a truth test.
-  _.reject = function(collection, test) {
-    // TIP: see if you can re-use _.filter() here, without simply
-    // copying code in and modifying it
-  };
-
-  // Produce a duplicate-free version of the array.
-  _.uniq = function(array, isSorted, iterator) {
-  };
-
+    };
+// regarding above, didn't have to use isSorted at all, in order
+// to obtain the correct output.
+// _uniq should be improved to disregard isSorted, because we have ES6.
+// ES6 allows us to get an array of unique elements by making a Set
+// and turning it back into an array.
 
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
