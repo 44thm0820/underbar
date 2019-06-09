@@ -93,7 +93,7 @@
     // Return all elements of an array that pass a truth test.
     // Found solution to _.filter (below) from 
     // https://learn.makerpass.com/groups/sei-prp52/courses/reactorcore/ssp-7w?id=lessons%2Fhof%2Fhofs-2
-
+    
     _.filter = function(collection, test) {
       let acc = [];
       _.each(collection, function(element){
@@ -118,52 +118,65 @@
     };
     
     // Produce a duplicate-free version of the array.
-/*
-From underscorejs.org
-
-uniq_.uniq(array, [isSorted], [iteratee]) Alias: unique
-Produces a duplicate - free version of the array, using === to test object equality.In particular only the first occurrence of each value is kept.If you know in advance that the array is sorted, passing true
-for isSorted will run a much faster algorithm.If you want to compute unique items based on a transformation, pass an iteratee
-function.
-
-_.uniq([1, 2, 1, 4, 1, 3]); => [1, 2, 4, 3]
-*/
-/*
-Found possible solution from link:
-https: //www.samanthaming.com/tidbits/43-3-ways-to-remove-array-duplicates
-Got an idea on lines 570-595 for underscore's github page at link
-https: //github.com/jashkenas/underscore/blob/master/underscore.js
-*/
-
-    _.uniq = function(array, isSorted, iterator) {
-      if (iterator !== undefined) {
-        let arrComputed = [];
-        for (let i = 0; i < array.length; i++) {
-            if (i === 0 || iterator(array[i])) {
-              arrComputed.push(array[i]);
-            }
+    /*
+    From underscorejs.org
+    
+    uniq_.uniq(array, [isSorted], [iteratee]) Alias: unique
+    Produces a duplicate - free version of the array, using === to test object equality.In particular only the first occurrence of each value is kept.If you know in advance that the array is sorted, passing true
+    for isSorted will run a much faster algorithm.If you want to compute unique items based on a transformation, pass an iteratee
+    function.
+    
+    _.uniq([1, 2, 1, 4, 1, 3]); => [1, 2, 4, 3]
+    */
+   /*
+   Found possible solution from link:
+   https: //www.samanthaming.com/tidbits/43-3-ways-to-remove-array-duplicates
+   Got an idea on lines 570-595 for underscore's github page at link
+   https: //github.com/jashkenas/underscore/blob/master/underscore.js
+   */
+  
+  _.uniq = function(array, isSorted, iterator) {
+    if (iterator !== undefined) {
+      let arrComputed = [];
+      for (let i = 0; i < array.length; i++) {
+        if (i === 0 || iterator(array[i])) {
+          arrComputed.push(array[i]);
         }
-        return [...(new Set(arrComputed))];
-      } 
-      else {
-        return [...(new Set(array))];
       }
-    };
-// regarding above, didn't have to use isSorted at all, in order
-// to obtain the correct output.
-// _uniq should be improved to disregard isSorted, because we have ES6.
-// ES6 allows us to get an array of unique elements by making a Set
-// and turning it back into an array.
-
+      return [...(new Set(arrComputed))];
+    } 
+    else {
+      return [...(new Set(array))];
+    }
+  };
+  // regarding above, didn't have to use isSorted at all, in order
+  // to obtain the correct output.
+  // _uniq should be improved to disregard isSorted, because we have ES6.
+  // ES6 allows us to get an array of unique elements by making a Set
+  // and turning it back into an array.
+  
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
+    let arr = [];
+    if (Array.isArray(collection)) {
+      for (let i = 0; i < collection.length; i++) {
+        arr.push( iterator(collection[i], i, collection) );
+      }
+    } 
+    else {
+      for (let key in collection) {
+        arr.push( iterator(collection[key], key, collection) );
+      }
+    }
+    return arr;
+  };
+
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
-  };
-
+  
   /*
-   * TIP: map is really handy when you want to transform an array of
+  * TIP: map is really handy when you want to transform an array of
    * values into a new array of values. _.pluck() is solved for you
    * as an example of this.
    */
@@ -201,7 +214,25 @@ https: //github.com/jashkenas/underscore/blob/master/underscore.js
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    if (Array.isArray(collection)){
+      if (accumulator === undefined) {
+        accumulator = collection[0];
+        collection = collection.slice(1);
+      }
+      _.each(collection, function (element, i) {
+        accumulator = iterator(accumulator, element, i);
+      });
+      return accumulator;
+    }
   };
+  // regarding _.reduce above, quick solution was found by looking at 
+  // SEI Premium Prep Part I, in Higher Order Functions, HOFs 4. 
+  // This "extra HOFS content" lesson 
+  // introduces "Reduce" and reduce with objects: "Reduce Optional".
+  // I was able to transcribe the code there to quickly fit the 
+  // _.reduce exercise above.
+
+
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
