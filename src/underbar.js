@@ -71,7 +71,7 @@
           iterator(collection[key], key, collection);
         }
       }
-    };
+  };
     
     // Returns the index at which value can be found in the array, or -1 if value
     // is not present in the array.
@@ -214,17 +214,18 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-    if (Array.isArray(collection)){
-      if (accumulator === undefined) {
+    if (Array.isArray(collection) && (accumulator === undefined)) {
         accumulator = collection[0];
         collection = collection.slice(1);
-      }
-      _.each(collection, function (element, i) {
-        accumulator = iterator(accumulator, element, i);
-      });
-      return accumulator;
     }
+    _.each(collection, function (element, i) {
+      accumulator = iterator(accumulator, element, i);
+    });
+    return accumulator;
   };
+  // the above _.reduce works for objects because
+  // the ._each function also works for objects.
+
   // regarding _.reduce above, quick solution was found by looking at 
   // SEI Premium Prep Part I, in Higher Order Functions, HOFs 4. 
   // This "extra HOFS content" lesson 
@@ -232,25 +233,52 @@
   // I was able to transcribe the code there to quickly fit the 
   // _.reduce exercise above.
 
+  /* 
+  From underscore.js
+  reduce_.reduce(list, iteratee, [memo], [context]) Aliases: inject, foldl
+  Also known as inject and foldl, reduce boils down a list of values into a single value.Memo is the initial state of the reduction, and each successive step of it should be returned by iteratee.The iteratee is passed four arguments: the memo, then the value and index(or key) of the iteration, and
+  finally a reference to the entire list.
+
+  If no memo is passed to the initial invocation of reduce, the iteratee is not invoked on the first element of the list.The first element is instead passed as the memo in the invocation of the iteratee on the next element in the list.
+
+  var sum = _.reduce([1, 2, 3], function (memo, num) {
+    return memo + num;
+  }, 0); => 6
+  */
 
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
-    return _.reduce(collection, function(wasFound, item) {
-      if (wasFound) {
-        return true;
-      }
-      return item === target;
-    }, false);
+    // if (Array.isArray(collection)) {
+      return _.reduce(collection, function(wasFound, item) {
+        if (wasFound) {
+          return true;
+        }
+        return item === target;
+      }, false);
+    // }
   };
-
-
+  /* Note I commented out the if(Array.isArray(collection)) { 
+  } because the .reduce function can be used for objects also */
+  /* Note that the parameter wasFound is used instead of accumulator.
+  MDN's definition of reduce uses the parameter accumulator.
+  */
+  
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    if (iterator === undefined) {
+      iterator = element => element;
+      //could also be written the above as
+      // iterator = function(element){ return element; };
+    }
+    return _.reduce(collection, function (accumulator, currentValue) {
+      return accumulator && !!iterator(currentValue);
+    }, true);
   };
+  /* for more details how I arrived at the ._every solution above, see stackoverflow explanation at https://stackoverflow.com/questions/24298493/how-to-re-write-every-all-from-underscore-js-using-reduce-and-each */
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
