@@ -399,7 +399,7 @@
                 while (arrScratch.length > 0) {
                   arrShuffled.push( ...arrScratch.splice(
                     getRandomInt(0, arrScratch.length), 1) );
-                }
+                }    
                 return arrShuffled;
             };
             
