@@ -258,33 +258,40 @@
         }
         return item === target;
       }, false);
-    // }
-  };
-  /* Note I commented out the if(Array.isArray(collection)) { 
-  } because the .reduce function can be used for objects also */
-  /* Note that the parameter wasFound is used instead of accumulator.
-  MDN's definition of reduce uses the parameter accumulator.
-  */
-  
-  // Determine whether all of the elements match a truth test.
-  _.every = function(collection, iterator) {
-    // TIP: Try re-using reduce() here.
-    if (iterator === undefined) {
-      iterator = element => element;
-      //could also be written the above as
-      // iterator = function(element){ return element; };
-    }
-    return _.reduce(collection, function (accumulator, currentValue) {
-      return accumulator && !!iterator(currentValue);
-    }, true);
-  };
-  /* for more details how I arrived at the ._every solution above, see stackoverflow explanation at https://stackoverflow.com/questions/24298493/how-to-re-write-every-all-from-underscore-js-using-reduce-and-each */
+      // }
+    };
+    /* Note I commented out the if(Array.isArray(collection)) { 
+    } because the .reduce function can be used for objects also */
+    /* Note that the parameter wasFound is used instead of accumulator.
+    MDN's definition of reduce uses the parameter accumulator.
+    */
+   
+   // Determine whether all of the elements match a truth test.
+   _.every = function(collection, iterator) {
+     // TIP: Try re-using reduce() here.
+     if (iterator === undefined) {
+       iterator = element => element;
+       //could also be written the above as
+       // iterator = function(element){ return element; };
+      }
+      return _.reduce(collection, function (accumulator, currentValue) {
+        return accumulator && !!iterator(currentValue);
+      }, true);
+    };
+    /* for more details how I arrived at the ._every solution above, see stackoverflow explanation at https://stackoverflow.com/questions/24298493/how-to-re-write-every-all-from-underscore-js-using-reduce-and-each */
+    
+    // Determine whether any of the elements pass a truth test. If no iterator is
+    // provided, provide a default one
+    _.some = function(collection, iterator) {
+      if (iterator === undefined) {
+        iterator = function(element){ return element; };
+      }
+      return _.reduce(collection, function(accumulator, currentValue) {
+        return accumulator ? true : !!iterator(currentValue);
+      }, false);        
 
-  // Determine whether any of the elements pass a truth test. If no iterator is
-  // provided, provide a default one
-  _.some = function(collection, iterator) {
-    // TIP: There's a very clever way to re-use every() here.
-  };
+      // TIP: There's a very clever way to re-use every() here.
+    };
 
 
   /**
