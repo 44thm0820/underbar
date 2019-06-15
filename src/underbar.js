@@ -313,11 +313,35 @@
             //     bla: "even more stuff"
             //   }); // obj1 now contains key1, key2, key3 and bla
             _.extend = function(obj) {
+              if (obj === undefined) {
+                return {};
+              }
+              let obj1 = arguments[0];
+              let srcs = Array.prototype.slice.call(arguments, 1);
+              for (let i = 0; i < srcs.length; i++) {
+                for (let key in srcs[i]) {
+                  obj1[key] = srcs[i][key];
+                }
+              }
+              return obj1;
             };
             
             // Like extend, but doesn't ever overwrite a key that already
             // exists in obj
             _.defaults = function(obj) {
+              if (obj === undefined) {
+                return {};
+              }
+              let obj1 = arguments[0];
+              let srcs = Array.prototype.slice.call(arguments, 1);
+              for (let i = 0; i < srcs.length; i++) {
+                for (let key in srcs[i]) {
+                  if (!(key in obj1)) {
+                    obj1[key] = srcs[i][key];
+                  }
+                }
+              }
+              return obj1;
             };
             
             
