@@ -313,7 +313,7 @@
             //     bla: "even more stuff"
             //   }); // obj1 now contains key1, key2, key3 and bla
             _.extend = function(obj) {
-              if (obj === undefined) {
+              if (!obj) {
                 return {};
               }
               let obj1 = arguments[0];
@@ -329,7 +329,7 @@
             // Like extend, but doesn't ever overwrite a key that already
             // exists in obj
             _.defaults = function(obj) {
-              if (obj === undefined) {
+              if (!obj) {
                 return {};
               }
               let obj1 = arguments[0];
@@ -385,8 +385,42 @@
             // already computed the result for the given argument and return that value
             // instead if possible.
             _.memoize = function(func) {
+              // let memo = {};
+              // let slice = Array.prototype.slice;
+
+              // return function() {
+              //   let args = slice.call(arguments);
+
+              //   if (args in memo) 
+              //     return memo[args];
+              //   else
+              //     return (memo[args] = func.apply(this, args));
+              // }
+              // answer above passed all but one test 
+              // did not pass test:
+              // "should run the memoized function twice when given an array 
+              // and then given a list of arguments"
+
+              // answer below adapted from 
+              // inlehmansterms.net/2015/03/01/javascript-memoization
+              // passes all tests
+              var cache = {};
+              return function () {
+                var key = JSON.stringify(arguments);
+                if (cache[key]) {
+                  return cache[key];
+                }
+                else {
+                  var val = func.apply(this, arguments);
+                  cache[key] = val;
+                  return val;
+                }
+              };
             };
             
+        
+
+
             // Delays a function for the given number of milliseconds, and then calls
             // it with the arguments supplied.
             //
