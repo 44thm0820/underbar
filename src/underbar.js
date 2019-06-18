@@ -385,41 +385,18 @@
             // already computed the result for the given argument and return that value
             // instead if possible.
             _.memoize = function(func) {
-              // let memo = {};
-              // let slice = Array.prototype.slice;
-
-              // return function() {
-              //   let args = slice.call(arguments);
-
-              //   if (args in memo) 
-              //     return memo[args];
-              //   else
-              //     return (memo[args] = func.apply(this, args));
-              // }
-              // answer above passed all but one test 
-              // did not pass test:
-              // "should run the memoized function twice when given an array 
-              // and then given a list of arguments"
-
               // answer below adapted from 
               // inlehmansterms.net/2015/03/01/javascript-memoization
-              // passes all tests
-              var cache = {};
+              let cache = {};
               return function () {
-                var key = JSON.stringify(arguments);
-                if (cache[key]) {
-                  return cache[key];
+                let key;
+                key = (arguments.length === 1) ? arguments[0] : JSON.stringify([...arguments]);
+                if (!cache[key]) {
+                  cache[key] = func.apply(this, arguments);
                 }
-                else {
-                  var val = func.apply(this, arguments);
-                  cache[key] = val;
-                  return val;
-                }
+                return cache[key];
               };
             };
-            
-        
-
 
             // Delays a function for the given number of milliseconds, and then calls
             // it with the arguments supplied.
